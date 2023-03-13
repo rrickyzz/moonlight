@@ -12,6 +12,9 @@ import 'package:provider/provider.dart';
 import 'package:routemaster/routemaster.dart';
 import 'dart:developer' as dev;
 
+import 'package:spotify_sdk/models/connection_status.dart';
+import 'package:spotify_sdk/spotify_sdk.dart';
+
 class HomePage extends HookWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -34,6 +37,7 @@ class HomePage extends HookWidget {
       () {
         provider.initUrl(
             url: "https://archive.org/details/neffexsavemecopyrightfree");
+        provider.initConnection();
       },
     );
 
@@ -65,7 +69,7 @@ class HomePage extends HookWidget {
               ),
             ),
             title: Text(
-              "PLAYING NOW",
+              "${provider.connectionStatus}",
               style: TextStyle(
                   color: DesignSystem.foundation.primaryBackgroundB,
                   fontSize: 12),
