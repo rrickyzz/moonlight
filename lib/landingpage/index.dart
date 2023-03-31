@@ -17,9 +17,71 @@ class LandingPage extends HookWidget {
     final sliderController = usePageController();
     final router = Routemaster.of(context);
 
+    animate() async {
+      while (true) {
+        await Future.delayed(const Duration(seconds: 3), () {
+          sliderController.nextPage(
+              duration: const Duration(milliseconds: 100),
+              curve: Curves.bounceIn);
+        });
+      }
+    }
+
     useEffect(() {
+      animate();
       return () => {};
     }, []);
+    var page1 = Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: 120.h),
+          child: Image.network(
+            'https://cdn.dribbble.com/users/942818/screenshots/16931572/media/b13cf2412257aaf031f4072973ff2fb7.jpg?compress=1&resize=840x630&vertical=top',
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 12.0),
+          child: Text(
+            'Read books \nwith no boundaries',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 24.sp,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        )
+      ],
+    );
+
+    var page2 = Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: 120.h),
+          child: Image.network(
+            'https://cdn.dribbble.com/users/942818/screenshots/16931572/media/d76dbc9501b20d6cfa1a0952eed1a441.jpg?compress=1&resize=840x630&vertical=top',
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 12.0),
+          child: Text(
+            'Never stop learning',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 24.sp,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        )
+      ],
+    );
+    var container = SizedBox(
+      height: 450.h,
+      width: MediaQuery.of(context).size.width,
+      child: PageView(
+        controller: sliderController,
+        children: [page1, page2],
+      ),
+    );
 
     return WillPopScope(
       onWillPop: () async => false,
@@ -65,24 +127,8 @@ class LandingPage extends HookWidget {
                                       )
                                     ],
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 120.h),
-                                    child: Image.network(
-                                      'https://cdn.dribbble.com/users/942818/screenshots/16931572/media/b13cf2412257aaf031f4072973ff2fb7.jpg?compress=1&resize=840x630&vertical=top',
-                                    ),
-                                  )
                                 ])),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 12.0),
-                              child: Text(
-                                'Read books with no boundaries',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 24.sp,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            )
+                            container
                           ],
                         ),
                       ),
