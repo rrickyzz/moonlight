@@ -1,19 +1,13 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:moonlight/provider/application.dart';
 import 'package:moonlight/styles/design_system.dart';
 import 'package:provider/provider.dart';
 import 'package:routemaster/routemaster.dart';
 import 'dart:developer' as dev;
-
-import 'package:spotify_sdk/models/connection_status.dart';
-import 'package:spotify_sdk/spotify_sdk.dart';
 
 class HomePage extends HookWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -35,11 +29,12 @@ class HomePage extends HookWidget {
 
     Future.microtask(
       () {
-        provider.initUrl(
-            url: "https://archive.org/details/neffexsavemecopyrightfree");
-        provider.initConnection();
+        provider.initSongs();
+        provider.initPlayer();
       },
     );
+
+    dev.inspect(provider.songs);
 
     return WillPopScope(
       onWillPop: () async => false,
@@ -109,7 +104,6 @@ class HomePage extends HookWidget {
                     provider.player.positionStream.listen((event) {
                       provider.player.pause();
                       provider.player.seek(event - const Duration(seconds: 10));
-                      provider.play();
                     });
                   },
                   style: NeumorphicStyle(
@@ -137,7 +131,7 @@ class HomePage extends HookWidget {
                       return;
                     }
 
-                    await provider.player.play();
+                    await provider.play();
                   },
                   style: const NeumorphicStyle(
                     shadowLightColor: Colors.grey,
@@ -154,11 +148,7 @@ class HomePage extends HookWidget {
                         stream: provider.player.positionStream,
                         builder: ((context, snapshot) {
                           return Icon(
-                            (snapshot.data!.inSeconds <
-                                        provider.max.value.inSeconds) &
-                                    provider.player.playing
-                                ? Icons.pause
-                                : Icons.play_arrow_rounded,
+                            Icons.play_arrow_rounded,
                             color: Colors.white,
                             size: 32,
                           );
@@ -245,13 +235,13 @@ class HomePage extends HookWidget {
                                   stream: provider.player.positionStream,
                                   builder: ((context, snapshot) {
                                     return Text(
-                                      provider.title.value,
+                                      'Title String',
                                       style: TextStyle(
                                           color: Colors.grey, fontSize: 24.sp),
                                     );
                                   })),
                               Text(
-                                provider.artist.value,
+                                'Artist String',
                                 style: TextStyle(
                                     color: Colors.grey, fontSize: 15.sp),
                               ),
@@ -266,12 +256,7 @@ class HomePage extends HookWidget {
                                               provider.player.positionStream,
                                           builder: ((context, snapshot) {
                                             return Text(
-                                              snapshot.data!.inSeconds <
-                                                      provider
-                                                          .max.value.inSeconds
-                                                  ? convertDuration(
-                                                      snapshot.data)
-                                                  : '',
+                                              'String',
                                               style: TextStyle(
                                                   color: DesignSystem.foundation
                                                       .primaryBackgroundB),
@@ -282,12 +267,7 @@ class HomePage extends HookWidget {
                                               provider.player.positionStream,
                                           builder: ((context, snapshot) {
                                             return Text(
-                                              snapshot.data!.inSeconds <
-                                                      provider
-                                                          .max.value.inSeconds
-                                                  ? provider.max.value
-                                                      .toString()
-                                                  : '',
+                                              'String',
                                               style: TextStyle(
                                                   color: DesignSystem.foundation
                                                       .primaryBackgroundB),
@@ -299,34 +279,34 @@ class HomePage extends HookWidget {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 5.h),
-                        child: StreamBuilder(
-                            stream: provider.player.positionStream,
-                            builder: ((context, snapshot) {
-                              return NeumorphicSlider(
-                                min: 0,
-                                max: provider.max.value.inSeconds.toDouble(),
-                                onChangeEnd: (percent) async {
-                                  provider.player.seek(Duration(
-                                      milliseconds:
-                                          (provider.max.value.inSeconds *
-                                                  percent ~/
-                                                  1000)
-                                              .toInt()));
-                                },
-                                style: const SliderStyle(
-                                    thumbBorder: NeumorphicBorder(
-                                        width: 10, color: Color(0XFF22262B)),
-                                    accent: Colors.amber,
-                                    variant: Color(0XFFEB4712)),
-                                value: snapshot.data!.inSeconds <
-                                        provider.max.value.inSeconds
-                                    ? snapshot.data!.inSeconds.toDouble()
-                                    : provider.min.value,
-                              );
-                            })),
-                      ),
+                      // Padding(
+                      //   padding: EdgeInsets.only(top: 5.h),
+                      //   child: StreamBuilder(
+                      //       stream: provider.player.positionStream,
+                      //       builder: ((context, snapshot) {
+                      //         return NeumorphicSlider(
+                      //           min: 0,
+                      //           max: provider.max.value.inSeconds.toDouble(),
+                      //           onChangeEnd: (percent) async {
+                      //             provider.player.seek(Duration(
+                      //                 milliseconds:
+                      //                     (provider.max.value.inSeconds *
+                      //                             percent ~/
+                      //                             1000)
+                      //                         .toInt()));
+                      //           },
+                      //           style: const SliderStyle(
+                      //               thumbBorder: NeumorphicBorder(
+                      //                   width: 10, color: Color(0XFF22262B)),
+                      //               accent: Colors.amber,
+                      //               variant: Color(0XFFEB4712)),
+                      //           value: snapshot.data!.inSeconds <
+                      //                   provider.max.value.inSeconds
+                      //               ? snapshot.data!.inSeconds.toDouble()
+                      //               : provider.min.value,
+                      //         );
+                      //       })),
+                      // ),
                       Padding(
                         padding: EdgeInsets.only(top: 70.h),
                       ),

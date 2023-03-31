@@ -40,8 +40,10 @@ dependencies:
   routemaster: ^1.0.1
   just_audio: ^0.9.31
   provider: ^6.0.5
-  spotify_sdk: ^2.3.1
   flutter_dotenv: ^5.0.2
+  path: ^1.8.2
+  path_provider: ^2.0.13
+  on_audio_query: ^2.6.2
 
 dev_dependencies:
   flutter_test:
