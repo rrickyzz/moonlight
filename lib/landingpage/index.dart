@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:moonlight/components/button_primary.dart';
 import 'package:moonlight/styles/design_system.dart';
 import 'package:provider/provider.dart';
@@ -16,13 +17,22 @@ class LandingPage extends HookWidget {
     ScreenUtil.init(context);
     final sliderController = usePageController();
     final router = Routemaster.of(context);
-
+    // Create storage
+    const storage = FlutterSecureStorage();
     animate() async {
       while (true) {
         await Future.delayed(const Duration(seconds: 3), () {
-          sliderController.nextPage(
-              duration: const Duration(milliseconds: 100),
-              curve: Curves.bounceIn);
+          if (sliderController.hasClients) {
+            if (sliderController.page == 1) {
+              sliderController.previousPage(
+                  duration: const Duration(milliseconds: 100),
+                  curve: Curves.bounceIn);
+            } else {
+              sliderController.nextPage(
+                  duration: const Duration(milliseconds: 100),
+                  curve: Curves.bounceIn);
+            }
+          }
         });
       }
     }
@@ -110,22 +120,28 @@ class LandingPage extends HookWidget {
                             Container(
                                 padding: const EdgeInsets.all(10),
                                 child: Column(children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        'Skip',
-                                        style: TextStyle(
-                                            color:
-                                                DesignSystem.foundation.black,
-                                            fontSize: 18.sp),
-                                      ),
-                                      const Icon(
-                                        Icons.skip_next,
-                                        size: 32,
-                                        color: Color(0XFF1CAEB1),
-                                      )
-                                    ],
+                                  InkWell(
+                                    onTapDown: (details) {
+                                      storage.write(
+                                          key: 'isNewUser', value: 'false');
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          'Skip',
+                                          style: TextStyle(
+                                              color:
+                                                  DesignSystem.foundation.black,
+                                              fontSize: 18.sp),
+                                        ),
+                                        const Icon(
+                                          Icons.skip_next,
+                                          size: 32,
+                                          color: Color(0XFF1CAEB1),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ])),
                             container
