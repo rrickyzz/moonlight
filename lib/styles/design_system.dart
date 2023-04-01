@@ -3,7 +3,7 @@ import 'package:moonlight/styles/colours.dart';
 
 class DesignSystem {
   static ColourFoundation foundation = ColourFoundation(
-    const Color(0xFF31373C),
+    const Color(0xFF0CC978),
     const Color(0XFF727679),
     const Color(0xFFE9E9E9),
     const Color(0xFF898A8D),

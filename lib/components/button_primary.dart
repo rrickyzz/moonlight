@@ -8,7 +8,7 @@ class PrimaryButton extends HookWidget {
     Key? key,
     required this.onPressed,
     required this.label,
-    this.color = Colors.amber,
+    this.color = const Color(0xFF0CC978),
     this.loading = false,
   }) : super(key: key);
 
@@ -24,7 +24,7 @@ class PrimaryButton extends HookWidget {
       minimumSize: MaterialStateProperty.resolveWith(
           (states) => Size(MediaQuery.of(context).size.width, 40.h)),
       shape: MaterialStateProperty.resolveWith((states) =>
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r))),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.r))),
       backgroundColor: MaterialStateProperty.resolveWith((states) {
         const Set<MaterialState> interactiveStates = <MaterialState>{
           MaterialState.disabled
