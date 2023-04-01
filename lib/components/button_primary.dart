@@ -8,11 +8,13 @@ class PrimaryButton extends HookWidget {
     Key? key,
     required this.onPressed,
     required this.label,
+    this.suffix,
     this.color = const Color(0xFF0CC978),
     this.loading = false,
   }) : super(key: key);
 
   final bool loading;
+  final Widget? suffix;
   final String label;
   final Function onPressed;
   final Color color;
@@ -39,10 +41,21 @@ class PrimaryButton extends HookWidget {
         onPressed: () {
           onPressed();
         },
-        child: Text(
-          label,
-          style: TextStyle(
-              letterSpacing: 1.2, fontSize: 18.sp, fontWeight: FontWeight.w700),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                  letterSpacing: 1.2,
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w700),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: suffix,
+            ),
+          ],
         ));
 
     return Material(
