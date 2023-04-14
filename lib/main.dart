@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:moonlight/home/home.dart';
 import 'package:moonlight/landingpage/index.dart';
 import 'package:moonlight/provider/application.dart';
+import 'package:moonlight/provider/signup.dart';
 import 'package:moonlight/routes/routes.dart';
 import 'package:moonlight/styles/design_system.dart';
 import 'package:provider/provider.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (contex) => ApplicationProvider()),
+        ChangeNotifierProvider(create: (contex) => SignupProvider()),
       ],
       child: ScreenUtilInit(builder: (context, child) {
         return Theme(

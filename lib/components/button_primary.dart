@@ -10,6 +10,7 @@ class PrimaryButton extends HookWidget {
     required this.label,
     this.suffix,
     this.color = const Color(0xFF0CC978),
+    this.enabled = true,
     this.loading = false,
   }) : super(key: key);
 
@@ -18,6 +19,7 @@ class PrimaryButton extends HookWidget {
   final String label;
   final Function onPressed;
   final Color color;
+  final enabled;
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
@@ -38,14 +40,16 @@ class PrimaryButton extends HookWidget {
     );
     var button = ElevatedButton(
         style: primaryBtnStyle,
-        onPressed: () {
-          onPressed();
-        },
+        onPressed: enabled
+            ? () {
+                onPressed();
+              }
+            : null,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              label,
+              loading ? 'Loading....' : label,
               style: TextStyle(
                   letterSpacing: 1.2,
                   fontSize: 18.sp,

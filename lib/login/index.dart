@@ -5,8 +5,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:moonlight/components/button_primary.dart';
 import 'package:moonlight/components/primay_textfield.dart';
+import 'package:moonlight/provider/application.dart';
 import 'package:moonlight/styles/design_system.dart';
 import 'package:provider/provider.dart';
 import 'package:routemaster/routemaster.dart';
@@ -17,11 +19,12 @@ class LoginPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
-    final sliderController = usePageController();
     final router = Routemaster.of(context);
     // Create storage
     const storage = FlutterSecureStorage();
     final firstNameController = useTextEditingController();
+    final provider = Provider.of<ApplicationProvider>(context);
+    final sliderController = usePageController();
     useEffect(() {
       return () => {};
     }, []);
@@ -94,7 +97,7 @@ class LoginPage extends HookWidget {
             onChange: (s) {},
             hasPrefixBox: true,
             prefixBoxContent: const Icon(
-              CupertinoIcons.eye,
+              Icons.key,
               color: Colors.white,
             ),
           ),
@@ -109,10 +112,15 @@ class LoginPage extends HookWidget {
           body: SafeArea(
             child: Stack(
               children: <Widget>[
-                Container(
-                  decoration:
-                      BoxDecoration(color: DesignSystem.foundation.white),
-                  child: null,
+                ColorFiltered(
+                  colorFilter:
+                      const ColorFilter.mode(Colors.black, BlendMode.overlay),
+                  child: Image.asset(
+                    'lib/images/bg.jpg',
+                    fit: BoxFit.cover,
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25.w),
@@ -124,6 +132,8 @@ class LoginPage extends HookWidget {
                       Expanded(
                         flex: 4,
                         child: PageView(
+                          controller: sliderController,
+                          physics: const NeverScrollableScrollPhysics(),
                           children: [page1, page2],
                         ),
                       ),
@@ -143,7 +153,14 @@ class LoginPage extends HookWidget {
                                             Icons.arrow_forward_ios_outlined,
                                             color: Colors.white,
                                           ),
-                                          onPressed: () => print('hello'),
+                                          onPressed: () async {
+                                            provider.setSignupSliderIndex();
+                                            sliderController.animateToPage(
+                                                provider.signupSliderIndex,
+                                                duration: const Duration(
+                                                    milliseconds: 300),
+                                                curve: Curves.easeInOut);
+                                          },
                                           label: 'Next'),
                                     ),
                                   )

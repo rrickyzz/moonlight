@@ -14,10 +14,22 @@ class ApplicationProvider extends ChangeNotifier {
   // Create storage
   final storage = FlutterSecureStorage();
   bool checkIfNewUser = true;
-
+  int signupSliderIndex = 0;
   isNewUser() async {
     var result = await storage.read(key: 'isNewUser');
     checkIfNewUser = result != null ? false : true;
+    notifyListeners();
+  }
+
+  setSignupSliderIndex() {
+    if (signupSliderIndex < 3) {
+      signupSliderIndex++;
+    }
+    notifyListeners();
+  }
+
+  resetSignupSliderIndex() {
+    signupSliderIndex = 0;
     notifyListeners();
   }
 }

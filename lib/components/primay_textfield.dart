@@ -16,6 +16,7 @@ class PrimaryTextfield extends HookWidget {
     required this.hasPrefixBox,
     this.prefixBoxContent = const SizedBox(),
     this.suffix,
+    this.textColor = Colors.black,
     this.color = const Color(0xFF0CC978),
   }) : super(key: key);
 
@@ -23,6 +24,7 @@ class PrimaryTextfield extends HookWidget {
   final Color color;
   final TextEditingController controller;
   final String placeholder;
+  final Color textColor;
   final Widget? suffix;
   final bool hasPrefixBox;
   final Widget prefixBoxContent;
@@ -31,6 +33,12 @@ class PrimaryTextfield extends HookWidget {
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
     final togglePass = useState(false);
+
+    final theme = InputDecorationTheme(
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.r),
+      ),
+    );
     var borderStyle = OutlineInputBorder(
         borderRadius: BorderRadius.only(
             topRight: Radius.circular(8.r), bottomRight: Radius.circular(8.r)),
@@ -50,7 +58,10 @@ class PrimaryTextfield extends HookWidget {
                 color: DesignSystem.foundation.primaryBackgroundA,
               ));
     var decoration = InputDecoration(
+        filled: true,
+        fillColor: Colors.white,
         label: Text(placeholder),
+        labelStyle: TextStyle(color: textColor),
         suffix:
             type == textfieldType.textfieldDefault ? null : passwordToggleIcon,
         border: borderStyle,
@@ -77,19 +88,23 @@ class PrimaryTextfield extends HookWidget {
                   child: Center(child: prefixBoxContent),
                 )),
           Expanded(
-            child: TextFormField(
-              style: TextStyle(
-                  fontSize: 14.sp,
-                  letterSpacing: 1.5,
-                  fontWeight: FontWeight.w500),
-              obscureText: type == textfieldType.textfieldPassword
-                  ? togglePass.value
-                  : false,
-              controller: controller,
-              decoration: decoration,
-              onChanged: (value) {
-                onChange(value);
-              },
+            child: Theme(
+              data: ThemeData(inputDecorationTheme: theme),
+              child: TextFormField(
+                style: TextStyle(
+                    color: textColor,
+                    fontSize: 14.sp,
+                    letterSpacing: 1.5,
+                    fontWeight: FontWeight.w500),
+                obscureText: type == textfieldType.textfieldPassword
+                    ? togglePass.value
+                    : false,
+                controller: controller,
+                decoration: decoration,
+                onChanged: (value) {
+                  onChange(value);
+                },
+              ),
             ),
           ),
         ],

@@ -4,7 +4,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:moonlight/components/button_primary.dart';
+import 'package:moonlight/provider/application.dart';
+import 'package:moonlight/provider/signup.dart';
 import 'package:moonlight/styles/design_system.dart';
 import 'package:provider/provider.dart';
 import 'package:routemaster/routemaster.dart';
@@ -18,6 +21,9 @@ class LandingPage extends HookWidget {
     final sliderController = usePageController();
     final router = Routemaster.of(context);
     // Create storage
+    final signupProvider = Provider.of<SignupProvider>(context);
+    final provider = Provider.of<ApplicationProvider>(context);
+
     const storage = FlutterSecureStorage();
     animate() async {
       while (true) {
@@ -156,7 +162,41 @@ class LandingPage extends HookWidget {
                               child: Column(
                                 children: [
                                   PrimaryButton(
-                                      onPressed: () => print('hello'),
+                                      loading: signupProvider.loading,
+                                      onPressed: () {
+                                        signupProvider.setLoading(true);
+                                        Future.delayed(
+                                            const Duration(seconds: 1),
+                                            () async {
+                                          // final bool hasConnection =
+                                          //     await InternetConnectionChecker()
+                                          //         .hasConnection;
+                                          bool hasConnection = true;
+                                          ;
+                                          if (hasConnection) {
+                                            router.push('/signup');
+                                            signupProvider.setLoading(false);
+                                          } else {
+                                            var dialog = AlertDialog(
+                                              title: const Icon(
+                                                Icons.wifi_off,
+                                                color: Colors.red,
+                                              ),
+                                              actions: [
+                                                PrimaryButton(
+                                                    onPressed: () =>
+                                                        Navigator.pop(context),
+                                                    label: 'Close')
+                                              ],
+                                            );
+
+                                            // ignore: use_build_context_synchronously
+                                            showDialog(
+                                                context: context,
+                                                builder: (v) => dialog);
+                                          }
+                                        });
+                                      },
                                       label: 'Start an Account')
                                 ],
                               ),
