@@ -6,6 +6,8 @@
    <application
         android:label="moonlight"
         android:name="${applicationName}"
+        android:largeHeap="true"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

@@ -13,11 +13,17 @@ import 'package:path_provider/path_provider.dart';
 class ApplicationProvider extends ChangeNotifier {
   // Create storage
   final storage = FlutterSecureStorage();
+  int bottomTabIndex = 0;
   bool checkIfNewUser = true;
   int signupSliderIndex = 0;
   isNewUser() async {
     var result = await storage.read(key: 'isNewUser');
     checkIfNewUser = result != null ? false : true;
+    notifyListeners();
+  }
+
+  setTabIndex(index) {
+    bottomTabIndex = index;
     notifyListeners();
   }
 
